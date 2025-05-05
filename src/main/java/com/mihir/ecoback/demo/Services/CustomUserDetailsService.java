@@ -22,25 +22,42 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new CustomUserDetails(user);
     }
 
-    public String loginasAdmin(String email, String password, PasswordEncoder passwordEncoder) {
-        UserModel userModel=userRepo.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("user not found"));
-        if(!userModel.getRole().equals("ROLE_ADMIN")){
-            return "Access denied: Not an admin";
-        }
-        if(!passwordEncoder.matches(password, userModel.getPassword())){
-            return "Invalid password";
-        }
-        return "admin login sucessfully";
-    }
+//    public String loginasAdmin(String email, String password, PasswordEncoder passwordEncoder) {
+//        UserModel userModel=userRepo.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("user not found"));
+//        if(!userModel.getRole().equals("ROLE_ADMIN")){
+//            return "Access denied: Not an admin";
+//        }
+//        if(!passwordEncoder.matches(password, userModel.getPassword())){
+//            return "Invalid password";
+//        }
+//        return "admin login sucessfully";
+//    }
+//
+//    public String loginasUser(String email, String password, PasswordEncoder passwordEncoder) {
+//        UserModel userModel=userRepo.findByEmail(email).orElse(null);
+//        if(userModel==null){
+//            return "Access denied: Email not match";
+//        } if(!userModel.getRole().equals("ROLE_USER")){
+//            return "Access denied: Not an USER";
+//        }
+//        if(!passwordEncoder.matches(password, userModel.getPassword())){
+//            return "Invalid password";
+//        }
+//        return "user login sucessfully";
+//    }
 
-    public String loginasUser(String email, String password, PasswordEncoder passwordEncoder) {
-        UserModel userModel=userRepo.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("user not found"));
-        if(!userModel.getRole().equals("ROLE_USER")){
-            return "Access denied: Not an USER";
+    public String login(String email, String password, PasswordEncoder passwordEncoder) {
+        UserModel userModel = userRepo.findByEmail(email).orElse(null);
+
+        if(userModel==null){
+            return "Email not Match";
         }
-        if(!passwordEncoder.matches(password, userModel.getPassword())){
+
+        if (!passwordEncoder.matches(password, userModel.getPassword())) {
             return "Invalid password";
         }
-        return "user login sucessfully";
+
+        // Optionally return role too if needed
+        return "login success:" + userModel.getRole();
     }
 }
